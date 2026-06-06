@@ -1,0 +1,135 @@
+/* =============================================================
+ * components.css
+ * Reusable UI elements: brand mark, buttons, cards, audit table.
+ * ============================================================= */
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-accent), #b06bff);
+  color: white;
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow-sm);
+}
+
+.brand-name {
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 160ms var(--ease-out),
+    border-color 160ms var(--ease-out),
+    transform 80ms var(--ease-out);
+}
+
+.btn:active { transform: translateY(1px); }
+
+.btn-primary {
+  background: var(--color-accent);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--color-accent-hover);
+  text-decoration: none;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.btn-ghost:hover {
+  background: var(--color-bg-elev);
+  text-decoration: none;
+}
+
+.cta-row {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-top: var(--space-5);
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-md);
+  transition: transform 160ms var(--ease-out), border-color 160ms var(--ease-out);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-accent);
+}
+
+.card h2 {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--space-3);
+  color: var(--color-accent-hover);
+}
+
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.audit-table th,
+.audit-table td {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-sm);
+  vertical-align: top;
+}
+
+.audit-table th {
+  background: var(--color-bg-elev);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.audit-table tr:last-child td { border-bottom: none; }
+
+.status-ok { color: var(--color-success); font-weight: 600; }
+.status-warn { color: var(--color-warn); font-weight: 600; }
+.status-fail { color: var(--color-danger); font-weight: 600; }
+
+.audit-table code {
+  word-break: break-all;
+  display: inline-block;
+  max-width: 60ch;
+}

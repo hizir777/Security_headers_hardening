@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>About &mdash; Security Headers Hardening Template</title>
+    <link rel="stylesheet" href="/public/css/theme.css" />
+    <link rel="stylesheet" href="/public/css/main.css" />
+    <link rel="stylesheet" href="/public/css/components.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <span class="brand-mark">SHH</span>
+        <span class="brand-name">Secure Web Template</span>
+      </div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/audit">Live Audit</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h1>About this project</h1>
+      <p>
+        This template is the practical companion to the
+        <em>Security Headers Hardening Guide &amp; Audit Report</em>, prepared
+        for the Secure Web Development course at Istinye University under
+        instructor <strong>Keyvan Arasteh</strong>. It demonstrates a
+        production-grade Express server that emits the six core defensive
+        HTTP response headers with the &ldquo;golden standard&rdquo; values
+        documented in the guide and verifies them via a live audit endpoint.
+      </p>
+
+      <h2>Why these headers?</h2>
+      <p>
+        Browser-enforced response headers are the cheapest, highest-leverage
+        defense-in-depth layer a web application can deploy. They neutralise
+        whole classes of attack &mdash; clickjacking, MIME confusion,
+        SSL-stripping, referrer leakage, content injection &mdash; without
+        requiring any change to application logic. They do not fix
+        server-side injection or broken authentication, but they reliably
+        contain the blast radius when something upstream goes wrong.
+      </p>
+
+      <h2>Architecture at a glance</h2>
+      <ul>
+        <li><strong>Single source of truth</strong> for every header value in
+          <code>src/config/headers.js</code>.</li>
+        <li><strong>Per-request nonce middleware</strong> attaches a fresh
+          128-bit value to <code>res.locals.cspNonce</code>.</li>
+        <li><strong>Helmet v7</strong> consumes the nonce via a directive
+          function so CSP is always in sync with the rendered HTML.</li>
+        <li><strong>Standalone audit endpoint</strong> at <code>/readyz</code>
+          and the human-facing <code>/audit</code> page programmatically
+          verify the live response.</li>
+        <li><strong>CSP violation receiver</strong> at <code>/csp-report</code>
+          accepts both legacy report-uri and Reporting API payloads.</li>
+      </ul>
+
+      <h2>References</h2>
+      <ul>
+        <li>OWASP Secure Headers Project</li>
+        <li>OWASP Cheat Sheet Series &mdash; CSP, HSTS, Clickjacking Defense</li>
+        <li>W3C Content Security Policy Level 3</li>
+        <li>RFC 6797 (HSTS), RFC 7034 (X-Frame-Options)</li>
+        <li>Weichselbaum et al., <em>CSP Is Dead, Long Live CSP!</em>, ACM CCS 2016</li>
+      </ul>
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; Istinye University &mdash; Secure Web Development</p>
+    </footer>
+
+    <script nonce="__CSP_NONCE__" src="/public/js/app.js"></script>
+  </body>
+</html>
