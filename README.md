@@ -254,6 +254,8 @@ list every reviewer should check:
   matrix and one fully-written penetration-test finding.
 - [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) &mdash; staged rollout (baseline →
   transport → CSP enforcement → Trusted Types).
+- [ROADMAP.md](ROADMAP.md) &mdash; milestones from v1.0 baseline through
+  v2.0, plus continuous commitments.
 
 ---
 
