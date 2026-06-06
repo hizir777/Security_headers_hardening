@@ -1,0 +1,43 @@
+# =============================================================================
+# docker-compose.yml
+# Local development / demo stack. Includes the app, an nginx reverse proxy
+# that terminates TLS and demonstrates the equivalent Nginx header config,
+# and a placeholder for a future log collector.
+# =============================================================================
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: security-headers-hardening:latest
+    container_name: shh-app
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOST: 0.0.0.0
+      HSTS_MAX_AGE: 63072000
+      HSTS_INCLUDE_SUBDOMAINS: "true"
+      HSTS_PRELOAD: "true"
+      LOG_LEVEL: info
+    expose:
+      - "3000"
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: ["CMD", "/nodejs/bin/node", "-e", "require('http').get('http://127.0.0.1:3000/healthz', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    networks:
+      - shh-net
+
+networks:
+  shh-net:
+    driver: bridge
