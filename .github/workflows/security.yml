@@ -1,0 +1,59 @@
+name: Security
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * 1"
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
+jobs:
+  npm-audit:
+    name: npm audit (high+)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm ci
+      - run: npm audit --audit-level=high
+
+  codeql:
+    name: CodeQL
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
+      - uses: github/codeql-action/analyze@v3
+
+  header-audit:
+    name: Live header audit
+    runs-on: ubuntu-latest
+    needs: npm-audit
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm ci
+      - name: Boot app in background
+        run: |
+          NODE_ENV=production node src/server.js &
+          echo $! > app.pid
+          sleep 2
+      - name: Run curl-based header audit
+        run: bash scripts/audit-headers.sh http://127.0.0.1:3000
+      - name: Stop app
+        if: always()
+        run: kill "$(cat app.pid)" || true

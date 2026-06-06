@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>Security Headers Hardening Template</title>
+    <link rel="stylesheet" href="/public/css/theme.css" />
+    <link rel="stylesheet" href="/public/css/main.css" />
+    <link rel="stylesheet" href="/public/css/components.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <span class="brand-mark">SHH</span>
+        <span class="brand-name">Secure Web Template</span>
+      </div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/audit">Live Audit</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <h1>Production-Ready Secure Web Template</h1>
+        <p class="lead">
+          Express + Helmet, strict nonce-based CSP, HSTS preload,
+          Trusted Types, and a deny-by-default Permissions-Policy &mdash;
+          all aligned with the OWASP Secure Headers Project.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="/audit">Run live header audit</a>
+          <a class="btn btn-ghost" href="/about">Read the threat model</a>
+        </div>
+      </section>
+
+      <section class="grid">
+        <article class="card">
+          <h2>Content-Security-Policy</h2>
+          <p>Strict <code>nonce</code> + <code>strict-dynamic</code> policy with
+            <code>object-src 'none'</code>, <code>base-uri 'self'</code>,
+            <code>frame-ancestors 'none'</code>, and Trusted Types.</p>
+        </article>
+        <article class="card">
+          <h2>Strict-Transport-Security</h2>
+          <p>2-year max-age with <code>includeSubDomains</code> and
+            <code>preload</code>. RFC 6797 compliant.</p>
+        </article>
+        <article class="card">
+          <h2>X-Frame-Options + frame-ancestors</h2>
+          <p>Both emitted in lock-step to mitigate clickjacking on modern
+            browsers (CSP) and legacy IE11 (XFO).</p>
+        </article>
+        <article class="card">
+          <h2>X-Content-Type-Options</h2>
+          <p><code>nosniff</code>. Blocks MIME confusion across user-upload
+            and CDN responses.</p>
+        </article>
+        <article class="card">
+          <h2>Referrer-Policy</h2>
+          <p><code>strict-origin-when-cross-origin</code>. Prevents
+            cross-origin path/query leakage and HTTPS&rarr;HTTP downgrade
+            leakage.</p>
+        </article>
+        <article class="card">
+          <h2>Permissions-Policy</h2>
+          <p>Deny-by-default for camera, microphone, geolocation, payment,
+            usb, accelerometer, gyroscope, autoplay, and interest-cohort.</p>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; Istinye University &mdash; Secure Web Development</p>
+    </footer>
+
+    <script nonce="__CSP_NONCE__" src="/public/js/app.js"></script>
+  </body>
+</html>
