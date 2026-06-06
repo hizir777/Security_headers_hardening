@@ -1,3 +1,136 @@
+<div align="center">
+  <a href="https://istinye.edu.tr">
+    <img src="docs/assets/istinye-university-logo.webp" alt="Istinye University" width="180"/>
+  </a>
+
+  # Security Headers Hardening / Güvenlik Başlıkları Sıkılaştırma
+
+  ![GitHub](https://img.shields.io/badge/GitHub-Private-red?style=flat-square&logo=github)
+  ![Language](https://img.shields.io/badge/Language-Node.js-blue?style=flat-square)
+  ![Status](https://img.shields.io/badge/Status-In%20Progress-yellow?style=flat-square)
+  ![Course](https://img.shields.io/badge/Course-BGT208-purple?style=flat-square)
+  ![License](https://img.shields.io/badge/License-Educational-green?style=flat-square)
+</div>
+
+---
+
+## 🎓 Instructor / Danışman
+
+| | |
+|---|---|
+| **Name / Ad** | Keyvan Arasteh |
+| **GitHub** | [@keyvanarasteh](https://github.com/keyvanarasteh) |
+| **Email** | [keyvan.arasteh@istinye.edu.tr](mailto:keyvan.arasteh@istinye.edu.tr) |
+| **LinkedIn** | [keyvanarasteh](https://www.linkedin.com/in/keyvanarasteh/) |
+| **Website** | [qline.tech](https://qline.tech) |
+
+---
+
+## 👤 Student / Öğrenci
+
+| | |
+|---|---|
+| **Name / Ad Soyad** | [Your Full Name / Adınız Soyadınız] |
+| **Student ID / Öğrenci No** | `****[middle digits / orta rakamlar]****` |
+
+---
+
+## 📚 Course Information / Ders Bilgileri
+
+| | |
+|---|---|
+| **Course Name / Ders Adı** | Secure Web Development / Güvenli Web Yazılımı Geliştirme |
+| **Course Code / Ders Kodu** | BGT208 |
+| **Credits / Kredi** | 3 ECTS |
+| **Semester / Dönem** | 2025-2026 Spring / 2025-2026 Bahar |
+| **Institution / Üniversite** | [Istinye University](https://istinye.edu.tr) |
+
+---
+
+## 📋 Project Overview / Proje Özeti
+
+A production-ready Express.js template that strictly implements the six
+core defensive HTTP response headers documented in the *Security Headers
+Hardening Guide & Audit Report*, covering OWASP A05:2021 — Security
+Misconfiguration.
+
+OWASP A05:2021 — Güvenlik Yanlış Yapılandırması kapsamında, *Güvenlik
+Başlıkları Sıkılaştırma Rehberi*'nde belgelenen altı temel savunma HTTP
+yanıt başlığını sıkı bir şekilde uygulayan, üretime hazır bir Express.js
+şablonu.
+
+---
+
+## 🗂 Repository Structure / Repo Yapısı
+
+```
+.
+├── README.md
+├── ROADMAP.md
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── SECURITY.md
+├── LICENSE
+├── Dockerfile
+├── docker-compose.yml
+├── .env.example
+├── .gitignore
+├── .github/workflows/
+├── docs/
+├── demo/
+├── public/
+├── scripts/
+├── src/
+└── tests/
+```
+
+---
+
+## 🚀 Getting Started / Kurulum
+
+```bash
+git clone https://github.com/hizir777/Security_headers_hardening
+cd Security_headers_hardening
+cp .env.example .env
+# Edit .env with your values / .env dosyasını doldurun
+docker-compose up -d
+```
+
+---
+
+## 📊 Deliverables / Teslimler
+
+| Item | Status |
+|------|--------|
+| Strict nonce + strict-dynamic CSP with Trusted Types | ✅ |
+| HSTS preload, X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy | ✅ |
+| Jest + curl-based header audit suite | ✅ |
+| Multi-stage distroless Dockerfile & hardened compose | ✅ |
+| GitHub Actions: CodeQL, npm audit, live header verification | ✅ |
+| Ten-site audit matrix in docs/AUDIT_REPORT.md | ⬜ |
+| Demo video & SecurityHeaders.com / Mozilla Observatory A+ screenshots | ⬜ |
+
+---
+
+## 📚 Documentation / Belgeleme
+
+All module docs → [`docs/modules/`](./docs/modules/)
+Research notes → [`docs/research/`](./docs/research/)
+
+---
+
+## 🔗 References / Kaynaklar
+
+- [OWASP Secure Headers Project](https://owasp.org/www-project-secure-headers/)
+- [OWASP Top 10 A05:2021 — Security Misconfiguration](https://owasp.org/Top10/A05_2021-Security_Misconfiguration/)
+- [Weichselbaum et al., *CSP Is Dead, Long Live CSP!*, ACM CCS 2016](https://research.google/pubs/csp-is-dead-long-live-csp-on-the-insecurity-of-whitelists-and-the-future-of-content-security-policy/)
+- [RFC 6797 — HTTP Strict Transport Security](https://datatracker.ietf.org/doc/html/rfc6797)
+- [RFC 7034 — X-Frame-Options](https://datatracker.ietf.org/doc/html/rfc7034)
+- [Mozilla HTTP Observatory](https://developer.mozilla.org/en-US/observatory)
+- [SecurityHeaders.com](https://securityheaders.com/)
+
+---
+
 # Security Headers Hardening &mdash; Secure Web Template
 
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
