@@ -10,6 +10,12 @@
   ![Status](https://img.shields.io/badge/Status-In%20Progress-yellow?style=flat-square)
   ![Course](https://img.shields.io/badge/Course-BGT208-purple?style=flat-square)
   ![License](https://img.shields.io/badge/License-Educational-green?style=flat-square)
+
+  [![Security Headers](https://img.shields.io/badge/securityheaders.com-A%2B-brightgreen?style=flat-square)](https://securityheaders.com/)
+  [![Mozilla Observatory](https://img.shields.io/badge/observatory-A%2B-brightgreen?style=flat-square)](https://developer.mozilla.org/en-US/observatory)
+  [![OWASP](https://img.shields.io/badge/OWASP-A05%3A2021-orange?style=flat-square&logo=owasp)](https://owasp.org/Top10/A05_2021-Security_Misconfiguration/)
+  [![CodeQL](https://img.shields.io/badge/CodeQL-enabled-blue?style=flat-square&logo=github)](.github/workflows/security.yml)
+  [![Docker](https://img.shields.io/badge/docker-multi--stage-2496ED?style=flat-square&logo=docker&logoColor=white)](Dockerfile)
 </div>
 
 ---
@@ -52,12 +58,18 @@
 A production-ready Express.js template that strictly implements the six
 core defensive HTTP response headers documented in the *Security Headers
 Hardening Guide & Audit Report*, covering OWASP A05:2021 — Security
-Misconfiguration.
+Misconfiguration. Every value the server emits derives from a single
+typed configuration module, is asserted by an automated Jest suite, and
+is verifiable from the command line, from CI, and from a live in-app
+`/audit` dashboard.
 
 OWASP A05:2021 — Güvenlik Yanlış Yapılandırması kapsamında, *Güvenlik
 Başlıkları Sıkılaştırma Rehberi*'nde belgelenen altı temel savunma HTTP
 yanıt başlığını sıkı bir şekilde uygulayan, üretime hazır bir Express.js
-şablonu.
+şablonu. Sunucunun ürettiği her değer tek bir tipli yapılandırma
+modülünden türetilir; otomatik Jest testleriyle doğrulanır; komut
+satırından, CI'dan ve uygulama içi canlı `/audit` panelinden
+ölçülebilir.
 
 ---
 
@@ -65,23 +77,33 @@ yanıt başlığını sıkı bir şekilde uygulayan, üretime hazır bir Express
 
 ```
 .
+├── .github/workflows/   # CodeQL, npm audit, lint+test, header verification
+├── docs/                # Architecture, threat model, headers, audit report
+│   └── assets/          # Logo and screenshots
+├── demo/                # Demo video link + screenshots
+├── public/              # Static front-end assets
+│   ├── css/             # theme.css, main.css, components.css
+│   └── js/              # app.js, audit-ui.js
+├── scripts/             # audit-headers.sh, split-commits.sh
+├── src/
+│   ├── config/          # Single source of truth for header values
+│   ├── controllers/     # HTTP handler logic
+│   ├── middleware/      # Nonce, Helmet, Permissions-Policy, rate limit
+│   ├── routes/          # Express routers
+│   ├── services/        # Programmatic header auditor
+│   ├── utils/           # Logger, crypto helpers
+│   └── views/           # HTML with nonce placeholders
+├── tests/               # Jest + supertest
+├── Dockerfile           # Multi-stage, distroless, non-root
+├── docker-compose.yml
+├── package.json
 ├── README.md
 ├── ROADMAP.md
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
 ├── SECURITY.md
 ├── LICENSE
-├── Dockerfile
-├── docker-compose.yml
-├── .env.example
-├── .gitignore
-├── .github/workflows/
-├── docs/
-├── demo/
-├── public/
-├── scripts/
-├── src/
-└── tests/
+└── .env.example
 ```
 
 ---
@@ -95,6 +117,18 @@ cp .env.example .env
 # Edit .env with your values / .env dosyasını doldurun
 docker-compose up -d
 ```
+
+Without Docker / Docker olmadan:
+
+```bash
+npm install
+npm run dev                                  # local server on :3000
+curl -sI http://127.0.0.1:3000/ | grep -iE 'content-security|frame|content-type|referrer|permissions'
+npm run test:headers                         # curl-based audit
+npm test                                     # Jest + supertest suite
+```
+
+Open <http://127.0.0.1:3000/audit> for the live audit dashboard.
 
 ---
 
@@ -114,8 +148,15 @@ docker-compose up -d
 
 ## 📚 Documentation / Belgeleme
 
-All module docs → [`docs/modules/`](./docs/modules/)
-Research notes → [`docs/research/`](./docs/research/)
+- [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) — module diagram and middleware order
+- [docs/THREAT_MODEL.md](./docs/THREAT_MODEL.md) — STRIDE-flavoured analysis
+- [docs/HEADERS.md](./docs/HEADERS.md) — full header reference (the *Security Headers Hardening Guide*)
+- [docs/AUDIT_REPORT.md](./docs/AUDIT_REPORT.md) — ten-site comparison matrix and one fully-written penetration-test finding
+- [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) — staged rollout (baseline → transport → CSP → Trusted Types)
+- [ROADMAP.md](./ROADMAP.md) — v1.0 baseline through v2.0 plus continuous commitments
+- [CONTRIBUTING.md](./CONTRIBUTING.md) — workflow, commit style, security-header change checklist
+- [SECURITY.md](./SECURITY.md) — vulnerability reporting process
+- [CHANGELOG.md](./CHANGELOG.md) — release history
 
 ---
 
@@ -128,95 +169,30 @@ Research notes → [`docs/research/`](./docs/research/)
 - [RFC 7034 — X-Frame-Options](https://datatracker.ietf.org/doc/html/rfc7034)
 - [Mozilla HTTP Observatory](https://developer.mozilla.org/en-US/observatory)
 - [SecurityHeaders.com](https://securityheaders.com/)
+- [Google CSP Evaluator](https://csp-evaluator.withgoogle.com/)
 
 ---
 
-# Security Headers Hardening &mdash; Secure Web Template
+## 🔍 Technical Reference / Teknik Referans
 
-[![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Express](https://img.shields.io/badge/express-4.x-000000?logo=express&logoColor=white)](https://expressjs.com/)
-[![Helmet](https://img.shields.io/badge/helmet-7.x-1d7da3)](https://helmetjs.github.io/)
-[![Security Headers](https://img.shields.io/badge/securityheaders.com-A%2B-brightgreen)](https://securityheaders.com/)
-[![Mozilla Observatory](https://img.shields.io/badge/observatory-A%2B-brightgreen)](https://observatory.mozilla.org/)
-[![OWASP](https://img.shields.io/badge/OWASP-Top%2010%20A05%3A2021-orange?logo=owasp)](https://owasp.org/Top10/A05_2021-Security_Misconfiguration/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![CI](https://img.shields.io/badge/CI-passing-brightgreen)](.github/workflows/ci.yml)
-[![CodeQL](https://img.shields.io/badge/CodeQL-enabled-blue?logo=github)](.github/workflows/security.yml)
-[![Docker](https://img.shields.io/badge/docker-multi--stage-2496ED?logo=docker&logoColor=white)](Dockerfile)
+### Demo
 
-> **Course:** Secure Web Development &mdash; **İstinye Üniversitesi** (Istinye University)
-> **Instructor:** **Keyvan Arasteh**
-> **Author:** Final Project Deliverable
-> **Status:** Production-ready reference template
-
-A production-grade Express.js template that strictly implements the six core
-defensive HTTP response headers documented in the accompanying
-*Security Headers Hardening Guide & Audit Report*. Every value the server
-emits derives from a single typed configuration module, is asserted by an
-automated Jest suite, and is verifiable from the command line, from a CI
-pipeline, and from a live in-app `/audit` dashboard.
-
----
-
-## Table of Contents
-
-- [Demo](#demo)
-- [What this template gives you](#what-this-template-gives-you)
-- [The six core security headers](#the-six-core-security-headers)
-- [Project structure](#project-structure)
-- [Quick start](#quick-start)
-- [Configuration](#configuration)
-- [Verification &mdash; CLI, CI, and the live audit page](#verification--cli-ci-and-the-live-audit-page)
-- [Docker](#docker)
-- [Threat model and mitigations](#threat-model-and-mitigations)
-- [Common pitfalls (Nginx, Helmet)](#common-pitfalls-nginx-helmet)
-- [Documentation](#documentation)
-- [Contributing](#contributing)
-- [Acknowledgements](#acknowledgements)
-- [License](#license)
-
----
-
-## Demo
-
-A walk-through video lives in [`demo/`](demo/). Replace the placeholder URL
-once recorded:
+A walk-through video lives in [`demo/`](demo/). Replace the placeholder URL once recorded:
 
 [![Watch the demo](https://img.shields.io/badge/YouTube-Demo%20walk--through-FF0000?logo=youtube)](https://www.youtube.com/watch?v=PLACEHOLDER_REPLACE_ME)
 
-You can also clone, `npm start`, and open <http://127.0.0.1:3000/audit> for
-a live self-audit page that fetches `/readyz` and displays per-header pass
-or fail status.
+### What this template gives you
 
----
-
-## What this template gives you
-
-- **Strict, nonce-based CSP** with `'strict-dynamic'`, `object-src 'none'`,
-  `base-uri 'self'`, `frame-ancestors 'none'`, and Trusted Types via
-  `require-trusted-types-for 'script'`. Aligned with Google's "CSP Is
-  Dead, Long Live CSP!" (Weichselbaum et al., ACM CCS 2016).
-- **HSTS preload** &mdash; `max-age=63072000; includeSubDomains; preload`,
-  with a documented rollout playbook in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
-- **X-Frame-Options DENY** plus `frame-ancestors 'none'` for legacy and
-  modern browser parity.
+- **Strict, nonce-based CSP** with `'strict-dynamic'`, `object-src 'none'`, `base-uri 'self'`, `frame-ancestors 'none'`, and Trusted Types via `require-trusted-types-for 'script'`. Aligned with Google's "CSP Is Dead, Long Live CSP!" (Weichselbaum et al., ACM CCS 2016).
+- **HSTS preload** — `max-age=63072000; includeSubDomains; preload`, with a documented rollout playbook in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+- **X-Frame-Options DENY** plus `frame-ancestors 'none'` for legacy and modern browser parity.
 - **X-Content-Type-Options `nosniff`** on every response, including 404s.
-- **Referrer-Policy `strict-origin-when-cross-origin`** (the modern
-  browser default, explicitly emitted so a CDN cannot strip it).
-- **Deny-by-default Permissions-Policy** for camera, microphone,
-  geolocation, payment, USB, accelerometer, gyroscope, autoplay, and
-  interest-cohort.
-- **Defence in depth at the application layer:** rate limiting,
-  fingerprint-header stripping, structured logging, and a CSP violation
-  receiver that normalises both legacy `report-uri` and the new
-  Reporting API.
-- **Automated assurance:** Jest tests assert each header by name; a
-  `curl`-based audit script runs both locally and in CI; CodeQL and
-  `npm audit` gate the build.
+- **Referrer-Policy `strict-origin-when-cross-origin`** (the modern browser default, explicitly emitted so a CDN cannot strip it).
+- **Deny-by-default Permissions-Policy** for camera, microphone, geolocation, payment, USB, accelerometer, gyroscope, autoplay, and interest-cohort.
+- **Defence in depth at the application layer:** rate limiting, fingerprint-header stripping, structured logging, and a CSP violation receiver that normalises both legacy `report-uri` and the new Reporting API.
+- **Automated assurance:** Jest tests assert each header by name; a `curl`-based audit script runs both locally and in CI; CodeQL and `npm audit` gate the build.
 
----
-
-## The six core security headers
+### The six core security headers
 
 | Header | Value | Source |
 |---|---|---|
@@ -227,67 +203,11 @@ or fail status.
 | `Referrer-Policy` | `strict-origin-when-cross-origin` | [src/config/headers.js](src/config/headers.js) |
 | `Permissions-Policy` | `camera=(), microphone=(), geolocation=(), payment=(), usb=(), accelerometer=(), gyroscope=(), autoplay=(), fullscreen=(self), interest-cohort=()` | [src/middleware/permissionsPolicy.js](src/middleware/permissionsPolicy.js) |
 
-The complete rationale (RFC references, attack vectors, golden-standard
-values) is documented in [docs/HEADERS.md](docs/HEADERS.md), which mirrors
-the *Security Headers Hardening Guide & Audit Report*.
+Full rationale (RFC references, attack vectors, golden-standard values) lives in [docs/HEADERS.md](docs/HEADERS.md).
 
----
+### Configuration
 
-## Project structure
-
-```
-.
-├── .github/workflows/   # CodeQL, npm audit, header verification
-├── docs/                # Architecture, threat model, headers, audit report
-├── demo/                # Demo video link + screenshots
-├── public/              # Static front-end assets (CSS, JS)
-│   ├── css/
-│   └── js/
-├── scripts/             # Audit script + legitimate commit-splitter
-├── src/
-│   ├── config/          # Single source of truth for header values
-│   ├── controllers/     # HTTP handler logic
-│   ├── middleware/      # Nonce, Helmet, Permissions-Policy, rate limit
-│   ├── routes/          # Express routers
-│   ├── services/        # Programmatic header auditor
-│   ├── utils/           # Logger, crypto helpers
-│   └── views/           # HTML with nonce placeholders
-├── tests/               # Jest + supertest
-├── Dockerfile           # Multi-stage, distroless, non-root
-├── docker-compose.yml
-└── package.json
-```
-
----
-
-## Quick start
-
-```bash
-# 1. Install
-npm install
-
-# 2. Run the dev server
-npm run dev
-
-# 3. Verify headers from a second terminal
-curl -sI http://127.0.0.1:3000/ | grep -iE 'content-security|frame|content-type|referrer|permissions'
-
-# 4. Or run the audit script (used by CI)
-npm run test:headers
-
-# 5. Run the full test suite
-npm test
-```
-
-Open <http://127.0.0.1:3000/audit> for the live audit UI.
-
----
-
-## Configuration
-
-All runtime configuration lives in environment variables. Copy
-`.env.example` to `.env` and adjust as needed. The defaults reflect the
-golden-standard recommendations from the guide.
+All runtime configuration lives in environment variables. Copy `.env.example` to `.env` and adjust as needed. Defaults reflect the golden-standard recommendations from the guide.
 
 | Variable | Default | Purpose |
 |---|---|---|
@@ -300,47 +220,25 @@ golden-standard recommendations from the guide.
 | `RATE_LIMIT_WINDOW_MS` | `900000` | 15 minutes. |
 | `RATE_LIMIT_MAX` | `100` | Per-IP request cap per window. |
 
----
-
-## Verification &mdash; CLI, CI, and the live audit page
+### Verification — CLI, CI, and the live audit page
 
 Three independent verification layers ship in this repo:
 
-1. **Jest unit + integration tests** &mdash; `tests/headers.test.js` asserts
-   every required header against a supertest client. CI fails on any
-   regression.
-2. **Curl-based shell audit** &mdash; `scripts/audit-headers.sh` produces a
-   pass/fail table suitable for log aggregation. Used in
-   `.github/workflows/security.yml`.
-3. **Live in-app audit** &mdash; the `/readyz` endpoint runs
-   `services/headerAuditor.js` against the response's own headers and
-   returns structured findings, rendered by the `/audit` page.
+1. **Jest unit + integration tests** — `tests/headers.test.js` asserts every required header against a supertest client. CI fails on any regression.
+2. **Curl-based shell audit** — `scripts/audit-headers.sh` produces a pass/fail table suitable for log aggregation. Used in `.github/workflows/security.yml`.
+3. **Live in-app audit** — the `/readyz` endpoint runs `services/headerAuditor.js` against the response's own headers and returns structured findings, rendered by the `/audit` page.
 
-Externally, validate against:
+Externally, validate against [SecurityHeaders.com](https://securityheaders.com/) (target: A+), [Mozilla HTTP Observatory](https://developer.mozilla.org/en-US/observatory) (target: 100+ / A+), [Google CSP Evaluator](https://csp-evaluator.withgoogle.com/), and [Qualys SSL Labs](https://www.ssllabs.com/ssltest/) for the TLS layer underneath HSTS.
 
-- [SecurityHeaders.com](https://securityheaders.com/) (target: A+)
-- [Mozilla HTTP Observatory](https://observatory.mozilla.org/) (target: 100+ / A+)
-- [Google CSP Evaluator](https://csp-evaluator.withgoogle.com/)
-- [Qualys SSL Labs](https://www.ssllabs.com/ssltest/) for the TLS layer
-  underneath HSTS.
-
----
-
-## Docker
+### Docker
 
 ```bash
 docker compose up --build
 ```
 
-The Dockerfile is multi-stage and the final image runs on
-`gcr.io/distroless/nodejs20-debian12:nonroot` with a read-only filesystem,
-dropped capabilities, and `no-new-privileges`. See
-[Dockerfile](Dockerfile) for the build details and
-[docker-compose.yml](docker-compose.yml) for the runtime constraints.
+The Dockerfile is multi-stage; the final image runs on `gcr.io/distroless/nodejs20-debian12:nonroot` with a read-only filesystem, dropped capabilities, and `no-new-privileges`. See [Dockerfile](Dockerfile) and [docker-compose.yml](docker-compose.yml) for the runtime constraints.
 
----
-
-## Threat model and mitigations
+### Threat model and mitigations
 
 Detailed write-up in [docs/THREAT_MODEL.md](docs/THREAT_MODEL.md). Summary:
 
@@ -355,62 +253,22 @@ Detailed write-up in [docs/THREAT_MODEL.md](docs/THREAT_MODEL.md). Summary:
 | Permission abuse from third-party iframes | Deny-by-default Permissions-Policy |
 | Server fingerprinting | `hidePoweredBy` + explicit stripper middleware |
 
----
+### Common pitfalls (Nginx, Helmet)
 
-## Common pitfalls (Nginx, Helmet)
+Documented at length in [docs/HEADERS.md §3](docs/HEADERS.md). Short list every reviewer should check:
 
-Documented at length in [docs/HEADERS.md §3](docs/HEADERS.md). The short
-list every reviewer should check:
+- **Nginx `add_header` inheritance trap** — a single `add_header` in a child block silently drops every parent header. Repeat them, or use `more_set_headers` from the `headers-more` module.
+- **Nginx missing `always` flag** — headers vanish on error responses (4xx / 5xx). The grading rubric checks 404 paths.
+- **Helmet default CSP is not strict** — ships with `script-src 'self'` and `style-src 'self' https: 'unsafe-inline'`. This template overrides it with `useDefaults: false` and a nonce + `'strict-dynamic'` policy.
+- **Helmet does not emit Permissions-Policy** — supplied with custom middleware in [`src/middleware/permissionsPolicy.js`](src/middleware/permissionsPolicy.js).
 
-- **Nginx `add_header` inheritance trap** &mdash; a single `add_header` in a
-  child block silently drops every parent header. Repeat them, or use
-  `more_set_headers` from the `headers-more` module.
-- **Nginx missing `always` flag** &mdash; headers vanish on error responses
-  (4xx / 5xx). The grading rubric checks 404 paths.
-- **Helmet default CSP is not strict** &mdash; ships with `script-src 'self'`
-  and `style-src 'self' https: 'unsafe-inline'`. This template overrides
-  it with `useDefaults: false` and a nonce + `'strict-dynamic'` policy.
-- **Helmet does not emit Permissions-Policy** &mdash; we supply it with
-  custom middleware in [`src/middleware/permissionsPolicy.js`](src/middleware/permissionsPolicy.js).
+### Acknowledgements
 
----
+- **İstinye Üniversitesi** — Department of Computer Engineering, Secure Web Development course.
+- **Keyvan Arasteh** — course instructor.
+- The OWASP Secure Headers Project, the OWASP Cheat Sheet Series authors, the Mozilla HTTP Observatory team, and Scott Helme (SecurityHeaders.com).
+- Weichselbaum, Spagnuolo, Lekies and Janc for *CSP Is Dead, Long Live CSP!* (ACM CCS 2016).
 
-## Documentation
-
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) &mdash; module diagram and
-  middleware order.
-- [docs/THREAT_MODEL.md](docs/THREAT_MODEL.md) &mdash; STRIDE-flavoured
-  analysis.
-- [docs/HEADERS.md](docs/HEADERS.md) &mdash; full reference (the
-  *Security Headers Hardening Guide*).
-- [docs/AUDIT_REPORT.md](docs/AUDIT_REPORT.md) &mdash; ten-site comparison
-  matrix and one fully-written penetration-test finding.
-- [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) &mdash; staged rollout (baseline →
-  transport → CSP enforcement → Trusted Types).
-- [ROADMAP.md](ROADMAP.md) &mdash; milestones from v1.0 baseline through
-  v2.0, plus continuous commitments.
-
----
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md). Security vulnerabilities should be
-reported via the process in [SECURITY.md](SECURITY.md).
-
----
-
-## Acknowledgements
-
-- **İstinye Üniversitesi** &mdash; Department of Computer Engineering, Secure
-  Web Development course.
-- **Keyvan Arasteh** &mdash; course instructor.
-- The OWASP Secure Headers Project, the OWASP Cheat Sheet Series authors,
-  the Mozilla HTTP Observatory team, and Scott Helme (SecurityHeaders.com).
-- Weichselbaum, Spagnuolo, Lekies and Janc for *CSP Is Dead, Long Live
-  CSP!* (ACM CCS 2016).
-
----
-
-## License
+### License
 
 Distributed under the MIT License. See [LICENSE](LICENSE) for full text.
