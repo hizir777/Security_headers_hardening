@@ -20,31 +20,6 @@
 
 ---
 
-## 📑 Table of Contents / İçindekiler
-
-- [🎓 Instructor / Danışman](#-instructor--danışman)
-- [👤 Student / Öğrenci](#-student--öğrenci)
-- [📚 Course Information / Ders Bilgileri](#-course-information--ders-bilgileri)
-- [📋 Project Overview / Proje Özeti](#-project-overview--proje-özeti)
-- [🗂 Repository Structure / Repo Yapısı](#-repository-structure--repo-yapısı)
-- [🚀 Getting Started / Kurulum](#-getting-started--kurulum)
-- [📊 Deliverables / Teslimler](#-deliverables--teslimler)
-- [📚 Documentation / Belgeleme](#-documentation--belgeleme)
-- [🔗 References / Kaynaklar](#-references--kaynaklar)
-- [🔍 Technical Reference / Teknik Referans](#-technical-reference--teknik-referans)
-  - [Demo](#demo)
-  - [What this template gives you](#what-this-template-gives-you)
-  - [The six core security headers](#the-six-core-security-headers)
-  - [Configuration](#configuration)
-  - [Verification — CLI, CI, and the live audit page](#verification--cli-ci-and-the-live-audit-page)
-  - [Docker](#docker)
-  - [Threat model and mitigations](#threat-model-and-mitigations)
-  - [Common pitfalls (Nginx, Helmet)](#common-pitfalls-nginx-helmet)
-  - [Acknowledgements](#acknowledgements)
-  - [License](#license)
-
----
-
 ## 🎓 Instructor / Danışman
 
 | | |
@@ -95,6 +70,31 @@ yanıt başlığını sıkı bir şekilde uygulayan, üretime hazır bir Express
 modülünden türetilir; otomatik Jest testleriyle doğrulanır; komut
 satırından, CI'dan ve uygulama içi canlı `/audit` panelinden
 ölçülebilir.
+
+---
+
+## 📑 Table of Contents / İçindekiler
+
+- [🎓 Instructor / Danışman](#-instructor--danışman)
+- [👤 Student / Öğrenci](#-student--öğrenci)
+- [📚 Course Information / Ders Bilgileri](#-course-information--ders-bilgileri)
+- [📋 Project Overview / Proje Özeti](#-project-overview--proje-özeti)
+- [🗂 Repository Structure / Repo Yapısı](#-repository-structure--repo-yapısı)
+- [🚀 Getting Started / Kurulum](#-getting-started--kurulum)
+- [📊 Deliverables / Teslimler](#-deliverables--teslimler)
+- [📚 Documentation / Belgeleme](#-documentation--belgeleme)
+- [🔗 References / Kaynaklar](#-references--kaynaklar)
+- [🔍 Technical Reference / Teknik Referans](#-technical-reference--teknik-referans)
+  - [Demo](#demo)
+  - [What this template gives you](#what-this-template-gives-you)
+  - [The six core security headers](#the-six-core-security-headers)
+  - [Configuration](#configuration)
+  - [Verification — CLI, CI, and the live audit page](#verification--cli-ci-and-the-live-audit-page)
+  - [Docker](#docker)
+  - [Threat model and mitigations](#threat-model-and-mitigations)
+  - [Common pitfalls (Nginx, Helmet)](#common-pitfalls-nginx-helmet)
+  - [Acknowledgements](#acknowledgements)
+  - [License](#license)
 
 ---
 
