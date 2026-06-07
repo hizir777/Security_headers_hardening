@@ -36,8 +36,8 @@
 
 | | |
 |---|---|
-| **Name / Ad Soyad** | [Your Full Name / Adınız Soyadınız] |
-| **Student ID / Öğrenci No** | `****[middle digits / orta rakamlar]****` |
+| **Name / Ad Soyad** | Can Ekizoğlu |
+| **Student ID / Öğrenci No** | `2420191008` |
 
 ---
 
@@ -47,7 +47,7 @@
 |---|---|
 | **Course Name / Ders Adı** | Secure Web Development / Güvenli Web Yazılımı Geliştirme |
 | **Course Code / Ders Kodu** | BGT208 |
-| **Credits / Kredi** | 3 ECTS |
+| **Credits / Kredi** | 5 ECTS |
 | **Semester / Dönem** | 2025-2026 Spring / 2025-2026 Bahar |
 | **Institution / Üniversite** | [Istinye University](https://istinye.edu.tr) |
 
@@ -79,7 +79,8 @@ satırından, CI'dan ve uygulama içi canlı `/audit` panelinden
 .
 ├── .github/workflows/   # CodeQL, npm audit, lint+test, header verification
 ├── docs/                # Architecture, threat model, headers, audit report
-│   └── assets/          # Logo and screenshots
+│   ├── assets/          # Logo and screenshots
+│   └── deepsearch/      # Deepsearch and other research papers
 ├── demo/                # Demo video link + screenshots
 ├── public/              # Static front-end assets
 │   ├── css/             # theme.css, main.css, components.css
