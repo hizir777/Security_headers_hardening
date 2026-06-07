@@ -287,6 +287,43 @@ Three independent verification layers ship in this repo:
 
 Externally, validate against [SecurityHeaders.com](https://securityheaders.com/) (target: A+), [Mozilla HTTP Observatory](https://developer.mozilla.org/en-US/observatory) (target: 100+ / A+), [Google CSP Evaluator](https://csp-evaluator.withgoogle.com/), and [Qualys SSL Labs](https://www.ssllabs.com/ssltest/) for the TLS layer underneath HSTS.
 
+#### Auditing other sites / Başka siteleri tarama
+
+The `scripts/audit-headers.sh` script accepts any URL as its first argument, so you can point it at **any public site** — not just this template's own server. Default target is `http://127.0.0.1:3000` if no URL is given.
+
+`scripts/audit-headers.sh` ilk argümanı URL alır, sadece kendi sunucunu değil **herhangi bir public siteyi** de tarayabilirsin. Argüman vermezsen `http://127.0.0.1:3000` taranır.
+
+```bash
+# Self-audit (default — your own running server)
+bash scripts/audit-headers.sh
+
+# Audit an external site
+bash scripts/audit-headers.sh https://github.com
+bash scripts/audit-headers.sh https://istinye.edu.tr
+bash scripts/audit-headers.sh https://owasp.org
+```
+
+Output: per-header `[OK]` / `[WARN]` / `[FAIL]` lines with the value the server returned. Useful for the ten-site comparison matrix in [`docs/AUDIT_REPORT.md`](./docs/AUDIT_REPORT.md).
+
+Çıktı: her header için `[OK]` / `[WARN]` / `[FAIL]` satırı + sunucunun döndüğü değer. [`docs/AUDIT_REPORT.md`](./docs/AUDIT_REPORT.md)'deki 10 sitelik karşılaştırma matrisini doldururken kullan.
+
+**Batch ten-site audit / Toplu 10 site denetimi:**
+
+```bash
+for site in https://github.com https://istinye.edu.tr https://owasp.org \
+            https://google.com https://wikipedia.org https://stackoverflow.com \
+            https://hackerone.com https://mozilla.org https://twitter.com \
+            https://anthropic.com; do
+  echo "=== $site ==="
+  bash scripts/audit-headers.sh "$site"
+  echo
+done | tee docs/audit-output.txt
+```
+
+For richer scoring (A+ / F grade with detailed bonuses and penalties), pair the CLI output with the web scanners above — [SecurityHeaders.com](https://securityheaders.com/) and [Mozilla Observatory](https://developer.mozilla.org/en-US/observatory) both accept any public URL and return a graded report in seconds.
+
+A+ / F notu, detaylı bonus ve cezalar için CLI çıktısını yukarıdaki web tarayıcılarıyla birleştir — [SecurityHeaders.com](https://securityheaders.com/) ve [Mozilla Observatory](https://developer.mozilla.org/en-US/observatory) her ikisi de herhangi bir public URL'yi kabul edip saniyeler içinde notlu rapor döner.
+
 ### Docker
 
 ```bash
