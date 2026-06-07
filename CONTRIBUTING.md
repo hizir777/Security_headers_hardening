@@ -39,7 +39,7 @@ public issues for vulnerabilities.
 ## Code style
 
 - Node.js, CommonJS modules (matches `package.json` `"type": "commonjs"`).
-- ESLint configuration in `.eslintrc.json`; `npm run lint` must pass.
+- ESLint v9 flat config in `eslint.config.js`; `npm run lint` must pass.
 - JSDoc for every exported function. Comments should explain *why*, not
   *what*.
 

@@ -62,12 +62,11 @@ function buildHelmetOptions() {
     crossOriginOpenerPolicy: { policy: 'same-origin' },
     crossOriginResourcePolicy: { policy: 'same-origin' },
     originAgentCluster: true,
-    dnsPrefetchControl: { allow: false },
+    xDnsPrefetchControl: { allow: false },
     ieNoOpen: true,
     hidePoweredBy: true,
     xPermittedCrossDomainPolicies: { permittedPolicies: 'none' },
     xXssProtection: false,
-    xDnsPrefetchControl: { allow: false },
   };
 }
 

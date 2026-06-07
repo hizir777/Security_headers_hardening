@@ -13,6 +13,13 @@ pnpm-debug.log*
 *.key
 secrets/
 
+# Python virtual environments (auxiliary scripts)
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+
 # Build artifacts
 dist/
 build/

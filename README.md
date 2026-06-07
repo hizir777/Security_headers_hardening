@@ -136,15 +136,47 @@ satırından, CI'dan ve uygulama içi canlı `/audit` panelinden
 
 ## 🚀 Getting Started / Kurulum
 
+### 1. Clone / Klonla
+
 ```bash
 git clone https://github.com/hizir777/Security_headers_hardening
 cd Security_headers_hardening
 cp .env.example .env
 # Edit .env with your values / .env dosyasını doldurun
+```
+
+### 2. Isolated environment / İzole ortam
+
+Node.js'in `venv` eşdeğeri **nvm** (Node Version Manager) ile proje-özel sürüm pinleme. Repo köküne `.nvmrc` dosyası ile Node 20 sabitlenmiştir:
+
+```bash
+# Install nvm (one-time) / nvm kurulumu (tek seferlik)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+exec $SHELL
+
+# Use the project-pinned Node version / Projeye özel Node sürümünü kullan
+nvm install         # reads .nvmrc → installs Node 20
+nvm use             # switches the shell to Node 20 for this project
+node --version      # → v20.x.x
+```
+
+> Python tabanlı yardımcı scriptler için klasik venv:
+> ```bash
+> python3 -m venv .venv          # create isolated env / izole ortam oluştur
+> source .venv/bin/activate      # Linux/macOS
+> # .venv\Scripts\activate       # Windows PowerShell
+> pip install -r requirements.txt  # if/when a requirements.txt is added
+> deactivate                     # exit the venv / ortamdan çık
+> ```
+> Not: `.venv/` zaten `.gitignore`'da, repo'ya commitlenmez.
+
+### 3. Run with Docker / Docker ile çalıştır
+
+```bash
 docker-compose up -d
 ```
 
-Without Docker / Docker olmadan:
+### 4. Run without Docker / Docker olmadan çalıştır
 
 ```bash
 npm install
