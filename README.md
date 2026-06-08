@@ -23,6 +23,7 @@
 - [📋 Proje Özeti](#-proje-özeti)
 - [🗂 Repo Yapısı](#-repo-yapısı)
 - [🚀 Kurulum](#-kurulum)
+- [🎯 Puanlama Nasıl Çalışıyor](#-puanlama-nasıl-çalışıyor)
 - [🎬 Demo](#-demo)
 - [📚 Belgeleme](#-belgeleme)
 - [🔗 Kaynaklar](#-kaynaklar)
@@ -140,6 +141,59 @@ npm run lint                # ESLint
 ```
 
 Tarayıcıda <http://127.0.0.1:3000/audit> adresini açarak canlı denetim panelini kullanabilirsiniz.
+
+---
+
+## 🎯 Puanlama Nasıl Çalışıyor
+
+Denetim paneli, **altı temel güvenlik başlığını** SecurityHeaders.com ve Mozilla HTTP Observatory tarzı kriterlerle notlandırır. Her başlık üç seviyeden birini alır:
+
+| Seviye | Simge | Anlamı |
+|---|---|---|
+| **PASS** | ✅ | Başlık mevcut ve doğru yapılandırılmış |
+| **WARN** | ⚠️ | Mevcut ama optimal değil (kısa HSTS, CSP'de `unsafe-inline` vb.) |
+| **FAIL** | ❌ | Eksik veya aktif zararlı (`unsafe-eval`, `unsafe-url` vb.) |
+
+### Skor Formülü
+
+```
+skor = (PASS × 16) + (WARN × 6) + (FAIL × 0)      →  0–100 aralığında
+```
+
+| Not | Skor | Tipik Örnek |
+|---|---|---|
+| **A+** | 95–100 | 6 PASS — her başlık sıkı politika ile |
+| **A**  | 85–94  | 5 PASS + 1 WARN |
+| **B**  | 75–84  | 4 PASS + 2 WARN veya 5 PASS + 1 FAIL |
+| **C**  | 65–74  | 3 PASS + 3 WARN |
+| **D**  | 50–64  | 3 PASS + 2 WARN + 1 FAIL |
+| **F**  | 0–49   | Çoğunluk eksik |
+
+### Her Başlık Ne Kontrol Eder
+
+| Başlık | PASS Kriteri |
+|---|---|
+| `Content-Security-Policy` | Mevcut, `script-src` içinde `unsafe-eval` / wildcard / `data:` yok |
+| `Strict-Transport-Security` | `max-age` ≥ 1 yıl + `includeSubDomains` |
+| `X-Frame-Options` | `DENY` / `SAMEORIGIN` veya CSP `frame-ancestors` mevcut |
+| `X-Content-Type-Options` | Tam olarak `nosniff` |
+| `Referrer-Policy` | `strict-origin*`, `no-referrer` veya `same-origin` |
+| `Permissions-Policy` | Mevcut, ≥ 3 yetenek açıkça devre dışı |
+
+Tüm WARN / FAIL kuralları için: [`src/services/externalAuditor.js`](./src/services/externalAuditor.js).
+
+### Google.com Niye A+ Almıyor?
+
+Yaygın bir sürpriz: **büyük siteler genellikle düşük puan alır.** Bu denetleyicimizin hatası **değildir** — public tarayıcılar (SecurityHeaders.com, Mozilla Observatory) da aynı sonuçları verir.
+
+| Site | Tipik Not | Sebep |
+|---|---|---|
+| **google.com** | D / F | Arama ana sayfası milyarlarca eski tarayıcı ve gömülü istemciyle uyumlu olmak zorunda; sıkı CSP ve modern başlıklar bu entegrasyonları bozar. Trade-off bilinçli. |
+| **github.com** | B / A | Sağlam taban ama host allowlist tabanlı CSP ve `style-src` içinde `'unsafe-inline'` var — bizim kurallarımıza göre WARN. |
+| **mullvad.net** | A+ | Gizlilik odaklı VPN sağlayıcısı; müşterileri güvenlik durumunu aktif kontrol eder, her modern standardı maksimuma çıkarırlar. |
+| **istinye.edu.tr** | Değişken | Üniversite siteleri genelde bir CMS arkasında; başlık hijyeni platform yapılandırmasına bağlı. |
+
+> Audit sayfasındaki **Additional Checks** sekmesi 10 yardımcı başlığı (COOP, COEP, CORP, X-XSS-Protection, Server, X-Powered-By, …) gösterir ama **bunlar genel notu etkilemez** — sadece bilgi amaçlıdır.
 
 ---
 
