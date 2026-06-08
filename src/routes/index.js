@@ -11,10 +11,12 @@ const express = require('express');
 const homeRouter = require('./home');
 const healthRouter = require('./health');
 const cspReportRouter = require('./csp-report');
+const externalAuditRouter = require('./external-audit');
 
 const router = express.Router();
 router.use('/', homeRouter);
 router.use('/', healthRouter);
 router.use('/', cspReportRouter);
+router.use('/', externalAuditRouter);
 
 module.exports = router;

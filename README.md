@@ -20,6 +20,33 @@
 
 ---
 
+## 📑 Table of Contents / İçindekiler
+
+- [🎓 Instructor / Danışman](#-instructor--danışman)
+- [👤 Student / Öğrenci](#-student--öğrenci)
+- [📚 Course Information / Ders Bilgileri](#-course-information--ders-bilgileri)
+- [📋 Project Overview / Proje Özeti](#-project-overview--proje-özeti)
+- [🗂 Repository Structure / Repo Yapısı](#-repository-structure--repo-yapısı)
+- [🚀 Getting Started / Kurulum](#-getting-started--kurulum)
+- [📊 Deliverables / Teslimler](#-deliverables--teslimler)
+- [📚 Documentation / Belgeleme](#-documentation--belgeleme)
+- [🔗 References / Kaynaklar](#-references--kaynaklar)
+- [🔍 Technical Reference / Teknik Referans](#-technical-reference--teknik-referans)
+  - [Demo](#demo)
+  - [What this template gives you](#what-this-template-gives-you)
+  - [The six core security headers](#the-six-core-security-headers)
+  - [Configuration](#configuration)
+  - [Verification — CLI, CI, and the live audit page](#verification--cli-ci-and-the-live-audit-page)
+    - [Auditing other sites — Web UI](#auditing-other-sites--web-ui--başka-siteleri-tarama--web-arayüzü)
+    - [Auditing other sites — CLI](#auditing-other-sites--cli--komut-satırı)
+  - [Docker](#docker)
+  - [Threat model and mitigations](#threat-model-and-mitigations)
+  - [Common pitfalls (Nginx, Helmet)](#common-pitfalls-nginx-helmet)
+  - [Acknowledgements](#acknowledgements)
+  - [License](#license)
+
+---
+
 ## 🎓 Instructor / Danışman
 
 | | |
@@ -324,6 +351,61 @@ Three independent verification layers ship in this repo:
 3. **Live in-app audit** — the `/readyz` endpoint runs `services/headerAuditor.js` against the response's own headers and returns structured findings, rendered by the `/audit` page.
 
 Externally, validate against [SecurityHeaders.com](https://securityheaders.com/) (target: A+), [Mozilla HTTP Observatory](https://developer.mozilla.org/en-US/observatory) (target: 100+ / A+), [Google CSP Evaluator](https://csp-evaluator.withgoogle.com/), and [Qualys SSL Labs](https://www.ssllabs.com/ssltest/) for the TLS layer underneath HSTS.
+
+#### Auditing other sites — Web UI / Başka siteleri tarama — Web arayüzü
+
+**Recommended for graders and demos.** Open <http://127.0.0.1:3000/audit>, type any public URL into the input field, and click **Run audit**. The server fetches the target on the user's behalf (browsers cannot read cross-origin security headers directly), grades the six core headers with SecurityHeaders.com / Mozilla Observatory-style rules, and displays a per-header pass / warn / fail table plus an overall grade (A+ … F).
+
+Results can be:
+- ⬇ Downloaded as **JSON** (full structured report)
+- ⬇ Downloaded as **CSV** (spreadsheet-ready)
+- 📋 Copied as a **Markdown row** suitable for the ten-site matrix in [`docs/AUDIT_REPORT.md`](./docs/AUDIT_REPORT.md)
+
+**Önerilen — değerlendirici ve demo için.** <http://127.0.0.1:3000/audit> sayfasını aç, input alanına herhangi bir public URL gir, **Run audit**'a tıkla. Sunucu hedefi kullanıcı adına çeker (tarayıcı cross-origin güvenlik headerlarını doğrudan okuyamaz), altı ana header'ı SecurityHeaders.com / Mozilla Observatory tarzı kurallarla notlandırır ve header başına pass / warn / fail tablosu + genel not (A+ … F) gösterir.
+
+Sonuçlar:
+- ⬇ **JSON** indir (tam yapısal rapor)
+- ⬇ **CSV** indir (tablo/Excel için)
+- 📋 **Markdown satırı** kopyala — [`docs/AUDIT_REPORT.md`](./docs/AUDIT_REPORT.md)'deki 10 sitelik matrise yapıştır
+
+> SSRF protection: in production (`NODE_ENV=production`) the proxy endpoint refuses targets that resolve to private, loopback, or link-local addresses. In development the restriction is lifted so the template can audit its own `localhost` instance.
+
+#### Auditing other sites — CLI / Komut satırı
+
+Same logic, scriptable form. `scripts/audit-headers.sh` accepts any URL as its first argument; default is `http://127.0.0.1:3000` if omitted.
+
+Aynı mantık, scriptlenebilir biçim. `scripts/audit-headers.sh` ilk argümanı URL alır; argüman vermezsen `http://127.0.0.1:3000` taranır.
+
+```bash
+# Self-audit (default — your own running server)
+bash scripts/audit-headers.sh
+
+# Audit an external site
+bash scripts/audit-headers.sh https://github.com
+bash scripts/audit-headers.sh https://istinye.edu.tr
+bash scripts/audit-headers.sh https://owasp.org
+```
+
+Output: per-header `[OK]` / `[WARN]` / `[FAIL]` lines with the value the server returned. Useful for the ten-site comparison matrix in [`docs/AUDIT_REPORT.md`](./docs/AUDIT_REPORT.md).
+
+Çıktı: her header için `[OK]` / `[WARN]` / `[FAIL]` satırı + sunucunun döndüğü değer. [`docs/AUDIT_REPORT.md`](./docs/AUDIT_REPORT.md)'deki 10 sitelik karşılaştırma matrisini doldururken kullan.
+
+**Batch ten-site audit / Toplu 10 site denetimi:**
+
+```bash
+for site in https://github.com https://istinye.edu.tr https://owasp.org \
+            https://google.com https://wikipedia.org https://stackoverflow.com \
+            https://hackerone.com https://mozilla.org https://twitter.com \
+            https://anthropic.com; do
+  echo "=== $site ==="
+  bash scripts/audit-headers.sh "$site"
+  echo
+done | tee docs/audit-output.txt
+```
+
+For richer scoring (A+ / F grade with detailed bonuses and penalties), pair the CLI output with the web scanners above — [SecurityHeaders.com](https://securityheaders.com/) and [Mozilla Observatory](https://developer.mozilla.org/en-US/observatory) both accept any public URL and return a graded report in seconds.
+
+A+ / F notu, detaylı bonus ve cezalar için CLI çıktısını yukarıdaki web tarayıcılarıyla birleştir — [SecurityHeaders.com](https://securityheaders.com/) ve [Mozilla Observatory](https://developer.mozilla.org/en-US/observatory) her ikisi de herhangi bir public URL'yi kabul edip saniyeler içinde notlu rapor döner.
 
 ### Docker
 
