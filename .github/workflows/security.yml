@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
-      - run: npm ci
+      - run: npm install
       - run: npm audit --audit-level=high
 
   codeql:
@@ -46,7 +46,7 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
-      - run: npm ci
+      - run: npm install
       - name: Boot app in background
         run: |
           NODE_ENV=production node src/server.js &
