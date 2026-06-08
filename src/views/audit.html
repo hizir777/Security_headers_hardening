@@ -24,14 +24,48 @@
     <main class="container">
       <h1>Live header audit</h1>
       <p>
-        Click <em>Run audit</em> to fetch <code>/readyz</code> and compare the
-        emitted response headers against the policy declared in
-        <code>src/config/headers.js</code>.
+        Audit the headers of any public URL, or click <em>Self-audit</em> to
+        check this template's own server. Results can be downloaded as JSON or
+        CSV for inclusion in <code>docs/AUDIT_REPORT.md</code>.
       </p>
-      <button id="run-audit" class="btn btn-primary">Run audit</button>
+
+      <form id="audit-form" class="audit-form" autocomplete="off">
+        <label for="target-url" class="visually-hidden">Target URL</label>
+        <input
+          id="target-url"
+          type="url"
+          name="url"
+          placeholder="https://example.com"
+          required
+          spellcheck="false"
+          autocapitalize="off"
+        />
+        <button id="run-external" type="submit" class="btn btn-primary">Run audit</button>
+        <button id="run-self" type="button" class="btn btn-ghost">Self-audit (/readyz)</button>
+      </form>
+
+      <div id="audit-status" class="audit-status" aria-live="polite"></div>
+
+      <div id="audit-summary" class="audit-summary" hidden>
+        <div class="grade-badge" id="grade-badge">–</div>
+        <div class="grade-meta">
+          <div><strong>Target:</strong> <code id="meta-target">–</code></div>
+          <div><strong>Final URL:</strong> <code id="meta-final">–</code></div>
+          <div><strong>HTTP status:</strong> <span id="meta-status">–</span></div>
+          <div><strong>Score:</strong> <span id="meta-score">–</span>/100</div>
+          <div><strong>Pass / Warn / Fail:</strong> <span id="meta-counts">–</span></div>
+          <div><strong>Elapsed:</strong> <span id="meta-elapsed">–</span> ms</div>
+        </div>
+        <div class="download-row">
+          <button id="download-json" type="button" class="btn btn-ghost">⬇ Download JSON</button>
+          <button id="download-csv" type="button" class="btn btn-ghost">⬇ Download CSV</button>
+          <button id="copy-md" type="button" class="btn btn-ghost">📋 Copy Markdown row</button>
+        </div>
+      </div>
+
       <table class="audit-table" id="audit-table" aria-live="polite">
         <thead>
-          <tr><th>Header</th><th>Present</th><th>Value</th><th>Status</th></tr>
+          <tr><th>Header</th><th>Present</th><th>Value</th><th>Status</th><th>Reason</th></tr>
         </thead>
         <tbody></tbody>
       </table>

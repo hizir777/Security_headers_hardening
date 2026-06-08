@@ -37,6 +37,8 @@
   - [The six core security headers](#the-six-core-security-headers)
   - [Configuration](#configuration)
   - [Verification — CLI, CI, and the live audit page](#verification--cli-ci-and-the-live-audit-page)
+    - [Auditing other sites — Web UI](#auditing-other-sites--web-ui--başka-siteleri-tarama--web-arayüzü)
+    - [Auditing other sites — CLI](#auditing-other-sites--cli--komut-satırı)
   - [Docker](#docker)
   - [Threat model and mitigations](#threat-model-and-mitigations)
   - [Common pitfalls (Nginx, Helmet)](#common-pitfalls-nginx-helmet)
@@ -287,11 +289,29 @@ Three independent verification layers ship in this repo:
 
 Externally, validate against [SecurityHeaders.com](https://securityheaders.com/) (target: A+), [Mozilla HTTP Observatory](https://developer.mozilla.org/en-US/observatory) (target: 100+ / A+), [Google CSP Evaluator](https://csp-evaluator.withgoogle.com/), and [Qualys SSL Labs](https://www.ssllabs.com/ssltest/) for the TLS layer underneath HSTS.
 
-#### Auditing other sites / Başka siteleri tarama
+#### Auditing other sites — Web UI / Başka siteleri tarama — Web arayüzü
 
-The `scripts/audit-headers.sh` script accepts any URL as its first argument, so you can point it at **any public site** — not just this template's own server. Default target is `http://127.0.0.1:3000` if no URL is given.
+**Recommended for graders and demos.** Open <http://127.0.0.1:3000/audit>, type any public URL into the input field, and click **Run audit**. The server fetches the target on the user's behalf (browsers cannot read cross-origin security headers directly), grades the six core headers with SecurityHeaders.com / Mozilla Observatory-style rules, and displays a per-header pass / warn / fail table plus an overall grade (A+ … F).
 
-`scripts/audit-headers.sh` ilk argümanı URL alır, sadece kendi sunucunu değil **herhangi bir public siteyi** de tarayabilirsin. Argüman vermezsen `http://127.0.0.1:3000` taranır.
+Results can be:
+- ⬇ Downloaded as **JSON** (full structured report)
+- ⬇ Downloaded as **CSV** (spreadsheet-ready)
+- 📋 Copied as a **Markdown row** suitable for the ten-site matrix in [`docs/AUDIT_REPORT.md`](./docs/AUDIT_REPORT.md)
+
+**Önerilen — değerlendirici ve demo için.** <http://127.0.0.1:3000/audit> sayfasını aç, input alanına herhangi bir public URL gir, **Run audit**'a tıkla. Sunucu hedefi kullanıcı adına çeker (tarayıcı cross-origin güvenlik headerlarını doğrudan okuyamaz), altı ana header'ı SecurityHeaders.com / Mozilla Observatory tarzı kurallarla notlandırır ve header başına pass / warn / fail tablosu + genel not (A+ … F) gösterir.
+
+Sonuçlar:
+- ⬇ **JSON** indir (tam yapısal rapor)
+- ⬇ **CSV** indir (tablo/Excel için)
+- 📋 **Markdown satırı** kopyala — [`docs/AUDIT_REPORT.md`](./docs/AUDIT_REPORT.md)'deki 10 sitelik matrise yapıştır
+
+> SSRF protection: in production (`NODE_ENV=production`) the proxy endpoint refuses targets that resolve to private, loopback, or link-local addresses. In development the restriction is lifted so the template can audit its own `localhost` instance.
+
+#### Auditing other sites — CLI / Komut satırı
+
+Same logic, scriptable form. `scripts/audit-headers.sh` accepts any URL as its first argument; default is `http://127.0.0.1:3000` if omitted.
+
+Aynı mantık, scriptlenebilir biçim. `scripts/audit-headers.sh` ilk argümanı URL alır; argüman vermezsen `http://127.0.0.1:3000` taranır.
 
 ```bash
 # Self-audit (default — your own running server)
