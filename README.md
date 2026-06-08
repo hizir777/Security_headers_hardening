@@ -63,8 +63,8 @@
 
 | | |
 |---|---|
-| **Name / Ad Soyad** | [Your Full Name / Adınız Soyadınız] |
-| **Student ID / Öğrenci No** | `****[middle digits / orta rakamlar]****` |
+| **Name / Ad Soyad** | Can Ekizoğlu |
+| **Student ID / Öğrenci No** | `2420191008` |
 
 ---
 
@@ -74,7 +74,7 @@
 |---|---|
 | **Course Name / Ders Adı** | Secure Web Development / Güvenli Web Yazılımı Geliştirme |
 | **Course Code / Ders Kodu** | BGT208 |
-| **Credits / Kredi** | 3 ECTS |
+| **Credits / Kredi** | 5 ECTS |
 | **Semester / Dönem** | 2025-2026 Spring / 2025-2026 Bahar |
 | **Institution / Üniversite** | [Istinye University](https://istinye.edu.tr) |
 
@@ -100,13 +100,39 @@ satırından, CI'dan ve uygulama içi canlı `/audit` panelinden
 
 ---
 
+## 📑 Table of Contents / İçindekiler
+
+- [🎓 Instructor / Danışman](#-instructor--danışman)
+- [👤 Student / Öğrenci](#-student--öğrenci)
+- [📚 Course Information / Ders Bilgileri](#-course-information--ders-bilgileri)
+- [📋 Project Overview / Proje Özeti](#-project-overview--proje-özeti)
+- [🗂 Repository Structure / Repo Yapısı](#-repository-structure--repo-yapısı)
+- [🚀 Getting Started / Kurulum](#-getting-started--kurulum)
+- [📊 Deliverables / Teslimler](#-deliverables--teslimler)
+- [📚 Documentation / Belgeleme](#-documentation--belgeleme)
+- [🔗 References / Kaynaklar](#-references--kaynaklar)
+- [🔍 Technical Reference / Teknik Referans](#-technical-reference--teknik-referans)
+  - [Demo](#demo)
+  - [What this template gives you](#what-this-template-gives-you)
+  - [The six core security headers](#the-six-core-security-headers)
+  - [Configuration](#configuration)
+  - [Verification — CLI, CI, and the live audit page](#verification--cli-ci-and-the-live-audit-page)
+  - [Docker](#docker)
+  - [Threat model and mitigations](#threat-model-and-mitigations)
+  - [Common pitfalls (Nginx, Helmet)](#common-pitfalls-nginx-helmet)
+  - [Acknowledgements](#acknowledgements)
+  - [License](#license)
+
+---
+
 ## 🗂 Repository Structure / Repo Yapısı
 
 ```
 .
 ├── .github/workflows/   # CodeQL, npm audit, lint+test, header verification
 ├── docs/                # Architecture, threat model, headers, audit report
-│   └── assets/          # Logo and screenshots
+│   ├── assets/          # Logo and screenshots
+│   └── deepsearch/      # Deepsearch and other research papers
 ├── demo/                # Demo video link + screenshots
 ├── public/              # Static front-end assets
 │   ├── css/             # theme.css, main.css, components.css
@@ -190,6 +216,43 @@ npm test                                     # Jest + supertest suite
 Open <http://127.0.0.1:3000/audit> for the live audit dashboard.
 
 ---
+#### Auditing other sites / Başka siteleri tarama
+
+The `scripts/audit-headers.sh` script accepts any URL as its first argument, so you can point it at **any public site** — not just this template's own server. Default target is `http://127.0.0.1:3000` if no URL is given.
+
+`scripts/audit-headers.sh` ilk argümanı URL alır, sadece kendi sunucunu değil **herhangi bir public siteyi** de tarayabilirsin. Argüman vermezsen `http://127.0.0.1:3000` taranır.
+
+```bash
+# Self-audit (default — your own running server)
+bash scripts/audit-headers.sh
+
+# Audit an external site
+bash scripts/audit-headers.sh https://github.com
+bash scripts/audit-headers.sh https://istinye.edu.tr
+bash scripts/audit-headers.sh https://owasp.org
+```
+
+Output: per-header `[OK]` / `[WARN]` / `[FAIL]` lines with the value the server returned. Useful for the ten-site comparison matrix in [`docs/AUDIT_REPORT.md`](./docs/AUDIT_REPORT.md).
+
+Çıktı: her header için `[OK]` / `[WARN]` / `[FAIL]` satırı + sunucunun döndüğü değer. [`docs/AUDIT_REPORT.md`](./docs/AUDIT_REPORT.md)'deki 10 sitelik karşılaştırma matrisini doldururken kullan.
+
+**Batch ten-site audit / Toplu 10 site denetimi:**
+
+```bash
+for site in https://github.com https://istinye.edu.tr https://owasp.org \
+            https://google.com https://wikipedia.org https://stackoverflow.com \
+            https://hackerone.com https://mozilla.org https://twitter.com \
+            https://anthropic.com; do
+  echo "=== $site ==="
+  bash scripts/audit-headers.sh "$site"
+  echo
+done | tee docs/audit-output.txt
+```
+
+For richer scoring (A+ / F grade with detailed bonuses and penalties), pair the CLI output with the web scanners above — [SecurityHeaders.com](https://securityheaders.com/) and [Mozilla Observatory](https://developer.mozilla.org/en-US/observatory) both accept any public URL and return a graded report in seconds.
+
+A+ / F notu, detaylı bonus ve cezalar için CLI çıktısını yukarıdaki web tarayıcılarıyla birleştir — [SecurityHeaders.com](https://securityheaders.com/) ve [Mozilla Observatory](https://developer.mozilla.org/en-US/observatory) her ikisi de herhangi bir public URL'yi kabul edip saniyeler içinde notlu rapor döner.
+
 
 ## 📊 Deliverables / Teslimler
 
