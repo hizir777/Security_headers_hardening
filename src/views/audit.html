@@ -3,10 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Live Header Audit</title>
+    <title>Security Header Audit</title>
     <link rel="stylesheet" href="/public/css/theme.css" />
     <link rel="stylesheet" href="/public/css/main.css" />
     <link rel="stylesheet" href="/public/css/components.css" />
+    <link rel="stylesheet" href="/public/css/audit.css" />
   </head>
   <body>
     <header class="site-header">
@@ -17,58 +18,167 @@
       <nav>
         <a href="/">Home</a>
         <a href="/about">About</a>
-        <a href="/audit">Live Audit</a>
+        <a href="/audit" aria-current="page">Live Audit</a>
       </nav>
     </header>
 
-    <main class="container">
-      <h1>Live header audit</h1>
-      <p>
-        Audit the headers of any public URL, or click <em>Self-audit</em> to
-        check this template's own server. Results can be downloaded as JSON or
-        CSV for inclusion in <code>docs/AUDIT_REPORT.md</code>.
-      </p>
+    <main class="audit-shell">
 
-      <form id="audit-form" class="audit-form" autocomplete="off">
-        <label for="target-url" class="visually-hidden">Target URL</label>
-        <input
-          id="target-url"
-          type="url"
-          name="url"
-          placeholder="https://example.com"
-          required
-          spellcheck="false"
-          autocapitalize="off"
-        />
-        <button id="run-external" type="submit" class="btn btn-primary">Run audit</button>
-        <button id="run-self" type="button" class="btn btn-ghost">Self-audit (/readyz)</button>
-      </form>
+      <!-- Hero / search -->
+      <section class="audit-hero">
+        <h1>Security Header Audit</h1>
+        <p class="lead">
+          Enter any website to grade its security headers against the OWASP
+          Secure Headers Project and CSP Level 3 baselines. The server
+          fetches the target on your behalf so cross-origin headers can be
+          read.
+        </p>
 
-      <div id="audit-status" class="audit-status" aria-live="polite"></div>
+        <form id="audit-form" class="search-bar" autocomplete="off" novalidate>
+          <span class="search-icon" aria-hidden="true">🔍</span>
+          <input
+            id="target-url"
+            type="text"
+            name="url"
+            placeholder="example.com  —  protocol optional"
+            spellcheck="false"
+            autocapitalize="off"
+            inputmode="url"
+            aria-label="Target URL"
+            required
+          />
+          <button id="run-external" type="submit" class="btn btn-primary search-btn">
+            <span class="btn-icon" aria-hidden="true">⚡</span>
+            <span class="btn-label">Run Audit</span>
+          </button>
+        </form>
 
-      <div id="audit-summary" class="audit-summary" hidden>
-        <div class="grade-badge" id="grade-badge">–</div>
-        <div class="grade-meta">
-          <div><strong>Target:</strong> <code id="meta-target">–</code></div>
-          <div><strong>Final URL:</strong> <code id="meta-final">–</code></div>
-          <div><strong>HTTP status:</strong> <span id="meta-status">–</span></div>
-          <div><strong>Score:</strong> <span id="meta-score">–</span>/100</div>
-          <div><strong>Pass / Warn / Fail:</strong> <span id="meta-counts">–</span></div>
-          <div><strong>Elapsed:</strong> <span id="meta-elapsed">–</span> ms</div>
+        <div class="search-actions">
+          <button id="run-self" type="button" class="chip">📍 Self-audit (this server)</button>
+          <button id="run-example-google" type="button" class="chip">google.com</button>
+          <button id="run-example-github" type="button" class="chip">github.com</button>
+          <button id="run-example-istinye" type="button" class="chip">istinye.edu.tr</button>
         </div>
-        <div class="download-row">
-          <button id="download-json" type="button" class="btn btn-ghost">⬇ Download JSON</button>
-          <button id="download-csv" type="button" class="btn btn-ghost">⬇ Download CSV</button>
-          <button id="copy-md" type="button" class="btn btn-ghost">📋 Copy Markdown row</button>
-        </div>
-      </div>
+      </section>
 
-      <table class="audit-table" id="audit-table" aria-live="polite">
-        <thead>
-          <tr><th>Header</th><th>Present</th><th>Value</th><th>Status</th><th>Reason</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+      <!-- Status surface (loading / error / idle) -->
+      <div id="audit-status" class="audit-status" role="status" aria-live="polite"></div>
+
+      <!-- Result -->
+      <section id="audit-result" class="audit-result" hidden>
+
+        <!-- Top hero card: site + grade + stats + toolbar -->
+        <div class="result-hero">
+          <div class="site-card">
+            <div class="favicon-wrap" id="favicon-wrap" aria-hidden="true">
+              <span id="favicon-letter">?</span>
+            </div>
+            <div class="site-meta">
+              <div class="site-hostname" id="site-hostname">—</div>
+              <div class="site-target">
+                <a id="site-target-link" href="#" target="_blank" rel="noopener noreferrer">—</a>
+              </div>
+              <div class="site-details">
+                <span class="pill" id="meta-status">HTTP —</span>
+                <span class="pill" id="meta-elapsed">— ms</span>
+                <span class="pill" id="meta-time">—</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="grade-card">
+            <div class="grade-ring">
+              <svg viewBox="0 0 120 120" class="grade-svg" aria-hidden="true">
+                <circle cx="60" cy="60" r="52" class="grade-ring-bg"/>
+                <circle cx="60" cy="60" r="52" class="grade-ring-fg" id="grade-ring-fg"
+                        stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+              </svg>
+              <div class="grade-text">
+                <div class="grade-letter" id="grade-letter">—</div>
+                <div class="grade-score"><span id="grade-score">—</span>/100</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stats-strip">
+            <div class="stat stat-pass">
+              <div class="stat-value" id="stat-pass">—</div>
+              <div class="stat-label">PASS</div>
+            </div>
+            <div class="stat stat-warn">
+              <div class="stat-value" id="stat-warn">—</div>
+              <div class="stat-label">WARN</div>
+            </div>
+            <div class="stat stat-fail">
+              <div class="stat-value" id="stat-fail">—</div>
+              <div class="stat-label">FAIL</div>
+            </div>
+            <div class="stat stat-total">
+              <div class="stat-value" id="stat-total">—</div>
+              <div class="stat-label">CHECKS</div>
+            </div>
+          </div>
+
+          <div class="toolbar">
+            <button id="download-json" type="button" class="btn btn-ghost">
+              <span aria-hidden="true">⬇</span> JSON
+            </button>
+            <button id="download-csv"  type="button" class="btn btn-ghost">
+              <span aria-hidden="true">⬇</span> CSV
+            </button>
+            <button id="download-md"   type="button" class="btn btn-ghost">
+              <span aria-hidden="true">⬇</span> Markdown
+            </button>
+            <button id="download-html" type="button" class="btn btn-ghost">
+              <span aria-hidden="true">⬇</span> HTML
+            </button>
+            <button id="copy-mdrow"    type="button" class="btn btn-ghost">
+              <span aria-hidden="true">📋</span> Copy matrix row
+            </button>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs" role="tablist">
+          <button class="tab is-active" role="tab" data-tab="core"      aria-selected="true">
+            Core Headers <span class="tab-count" id="tab-count-core">0</span>
+          </button>
+          <button class="tab"           role="tab" data-tab="additional" aria-selected="false">
+            Additional Checks <span class="tab-count" id="tab-count-additional">0</span>
+          </button>
+          <button class="tab"           role="tab" data-tab="raw"        aria-selected="false">
+            Raw Response <span class="tab-count" id="tab-count-raw">0</span>
+          </button>
+        </div>
+
+        <!-- Tab: Core -->
+        <div class="tab-panel is-active" id="panel-core" role="tabpanel">
+          <ul class="findings" id="findings-core"></ul>
+        </div>
+
+        <!-- Tab: Additional -->
+        <div class="tab-panel" id="panel-additional" role="tabpanel" hidden>
+          <ul class="findings" id="findings-additional"></ul>
+        </div>
+
+        <!-- Tab: Raw -->
+        <div class="tab-panel" id="panel-raw" role="tabpanel" hidden>
+          <div class="raw-headers" id="raw-headers"></div>
+        </div>
+
+      </section>
+
+      <!-- Empty / first-visit state -->
+      <section id="audit-empty" class="audit-empty">
+        <div class="empty-glyph" aria-hidden="true">🛡</div>
+        <h2>No audit yet</h2>
+        <p>
+          Type a URL above and press <kbd>Enter</kbd>, or pick one of the
+          example chips. Protocol is optional — <code>google.com</code> works
+          just like <code>https://google.com</code>.
+        </p>
+      </section>
+
     </main>
 
     <footer class="site-footer">
