@@ -28,12 +28,17 @@ jobs:
   codeql:
     name: CodeQL
     runs-on: ubuntu-latest
+    # Code scanning must be enabled at Settings → Security → Code scanning.
+    # We don't want the workflow to fail in repos where it isn't enabled yet,
+    # so we mark the job continue-on-error and the SARIF upload is best-effort.
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: github/codeql-action/init@v3
         with:
           languages: javascript
       - uses: github/codeql-action/analyze@v3
+        continue-on-error: true
 
   header-audit:
     name: Live header audit
