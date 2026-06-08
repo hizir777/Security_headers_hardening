@@ -120,11 +120,11 @@ cp .env.example .env
 ### 2. Node.js ile Çalıştır
 
 ```bash
-nvm install        # .nvmrc'den Node 20 yükler
-nvm use            # Node 20'ye geçer
-npm install
+npm install        # bağımlılıkları yükler
 npm run dev        # localhost:3000'de sunucu başlar
 ```
+
+> **Not:** Proje Node.js ≥ 20 gerektirir. Sisteminizde birden fazla Node sürümü varsa `nvm use` komutuyla `.nvmrc`'deki sürüme geçebilirsiniz.
 
 ### 3. Docker ile Çalıştır
 
