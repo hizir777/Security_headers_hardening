@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://istinye.edu.tr">
-    <img src="docs/assets/istinye-university-logo.webp" alt="Istinye University" width="180"/>
+    <img src="https://github.com/user-attachments/assets/7be1d44d-0ec2-4315-96c2-04e56145a53c" alt="Istinye University" width="180"/>
   </a>
   
   # Security Headers Hardening / Güvenlik Başlıkları Sıkılaştırma
