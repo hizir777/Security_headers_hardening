@@ -441,37 +441,75 @@ ${addRows ? `
 
   /* ────────────────────── Wire up ────────────────────── */
 
-  document.addEventListener('DOMContentLoaded', () => {
-    showEmpty();
+  /**
+   * Wire up listeners. Called once on DOMContentLoaded; safe to re-run
+   * (each addEventListener is idempotent against this scope).
+   */
+  function boot() {
+    console.info('[audit] UI booting — version 3');
 
+    const input = $('target-url');
+    const runBtn = $('run-external');
     const form = $('audit-form');
-    if (form) form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      runExternalAudit($('target-url').value);
+
+    // Helper that resolves the current input value and kicks off an audit.
+    // Debounced so the three redundant entry points (form submit, button
+    // click, Enter keydown) cannot fire the same audit twice in a row.
+    let lastTrigger = 0;
+    const triggerFromInput = () => {
+      const now = Date.now();
+      if (now - lastTrigger < 200) return;
+      lastTrigger = now;
+      const v = (input && input.value || '').trim();
+      runExternalAudit(v);
+    };
+
+    // Redundant triggers — form submit, button click, Enter on input.
+    if (form) form.addEventListener('submit', (e) => { e.preventDefault(); triggerFromInput(); });
+    if (runBtn) runBtn.addEventListener('click', (e) => { e.preventDefault(); triggerFromInput(); });
+    if (input) input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); triggerFromInput(); }
     });
 
-    $('run-self').addEventListener('click', runSelfAudit);
-    $('run-example-google').addEventListener('click', () => {
-      $('target-url').value = 'google.com';
-      runExternalAudit('google.com');
-    });
-    $('run-example-github').addEventListener('click', () => {
-      $('target-url').value = 'github.com';
-      runExternalAudit('github.com');
-    });
-    $('run-example-istinye').addEventListener('click', () => {
-      $('target-url').value = 'istinye.edu.tr';
-      runExternalAudit('istinye.edu.tr');
-    });
+    // Example chips
+    const chip = (id, host) => {
+      const b = $(id);
+      if (b) b.addEventListener('click', () => {
+        if (input) input.value = host;
+        runExternalAudit(host);
+      });
+    };
+    chip('run-example-google', 'google.com');
+    chip('run-example-github', 'github.com');
+    chip('run-example-istinye', 'istinye.edu.tr');
+    const selfBtn = $('run-self');
+    if (selfBtn) selfBtn.addEventListener('click', runSelfAudit);
 
-    $('download-json').addEventListener('click', handleDownloadJson);
-    $('download-csv').addEventListener('click', handleDownloadCsv);
-    $('download-md').addEventListener('click', handleDownloadMd);
-    $('download-html').addEventListener('click', handleDownloadHtml);
-    $('copy-mdrow').addEventListener('click', handleCopyMatrix);
+    // Downloads
+    const bind = (id, fn) => { const b = $(id); if (b) b.addEventListener('click', fn); };
+    bind('download-json', handleDownloadJson);
+    bind('download-csv', handleDownloadCsv);
+    bind('download-md', handleDownloadMd);
+    bind('download-html', handleDownloadHtml);
+    bind('copy-mdrow', handleCopyMatrix);
 
+    // Tabs
     document.querySelectorAll('.tab').forEach((t) => {
       t.addEventListener('click', () => switchTab(t.dataset.tab));
     });
-  });
+
+    // First-visit experience: auto-run self-audit so the user sees the
+    // dashboard populated with this server's own headers immediately,
+    // confirming the UI is wired up correctly.
+    showEmpty();
+    runSelfAudit().catch((err) => console.error('[audit] self-audit on boot failed', err));
+  }
+
+  // DOMContentLoaded may already have fired by the time this script
+  // runs (some browsers, some script load orders). Guard accordingly.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 })();

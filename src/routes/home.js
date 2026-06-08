@@ -7,11 +7,12 @@
 'use strict';
 
 const express = require('express');
-const { getHome, getAbout, getAuditPage } = require('../controllers/homeController');
+const { getHome, getLegacyHome, getAbout, getAuditPage } = require('../controllers/homeController');
 
 const router = express.Router();
 router.get('/', getHome);
-router.get('/about', getAbout);
 router.get('/audit', getAuditPage);
+router.get('/about', getAbout);
+router.get('/home', getLegacyHome);
 
 module.exports = router;

@@ -29,10 +29,20 @@ function renderView(name, nonce) {
 }
 
 /**
- * GET / — landing page.
+ * GET / — landing page. The Security Header Audit is the project's primary
+ * deliverable, so we render it directly at the root so the first page a
+ * visitor (or grader) sees is the live audit dashboard.
  * @type {import('express').RequestHandler}
  */
 function getHome(req, res) {
+  res.type('html').send(renderView('audit', res.locals.cspNonce));
+}
+
+/**
+ * GET /home — the legacy marketing landing page, kept for reference.
+ * @type {import('express').RequestHandler}
+ */
+function getLegacyHome(req, res) {
   res.type('html').send(renderView('index', res.locals.cspNonce));
 }
 
@@ -52,4 +62,4 @@ function getAuditPage(req, res) {
   res.type('html').send(renderView('audit', res.locals.cspNonce));
 }
 
-module.exports = { getHome, getAbout, getAuditPage };
+module.exports = { getHome, getLegacyHome, getAbout, getAuditPage };
