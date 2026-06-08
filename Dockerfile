@@ -16,8 +16,8 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Install build deps separately so the layer caches well.
-COPY package.json ./
-RUN npm install --include=dev
+COPY package.json package-lock.json ./
+RUN npm ci --include=dev
 
 COPY . .
 
