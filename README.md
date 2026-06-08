@@ -2,16 +2,17 @@
 
   # Security Headers Hardening / Güvenlik Başlıkları Sıkılaştırma
 
+  ![GitHub](https://img.shields.io/badge/GitHub-Private-red?style=flat-square&logo=github)
   ![Language](https://img.shields.io/badge/Language-Node.js-blue?style=flat-square)
   ![Status](https://img.shields.io/badge/Status-In%20Progress-yellow?style=flat-square)
   ![Course](https://img.shields.io/badge/Course-BGT208-purple?style=flat-square)
-  ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+  ![License](https://img.shields.io/badge/License-Educational-green?style=flat-square)
 
 </div>
 
 ---
 
-## 📑 İçindekiler
+## 📑 Table of Contents / İçindekiler
 
 - [🎓 Danışman](#-danışman)
 - [👤 Öğrenci](#-öğrenci)
@@ -148,16 +149,6 @@ Demo videosu ve ekran görüntüleri [`demo/`](demo/) klasöründe yer almaktad�
 > Demo videosu kaydedildikten sonra aşağıdaki link güncellenecektir.
 
 [![Demo Videosu](https://img.shields.io/badge/YouTube-Demo%20Videosu-FF0000?style=flat-square&logo=youtube)](https://www.youtube.com/watch?v=PLACEHOLDER)
-
-### Ekran Görüntüleri
-
-Demo klasörüne eklenecek ekran görüntüleri:
-
-- `01-curl-headers.png` — curl ile header çıktısı
-- `02-audit-ui.png` — `/audit` canlı denetim paneli
-- `03-jest-pass.png` — Jest test sonuçları
-- `04-securityheaders-grade.png` — SecurityHeaders.com notu
-- `05-observatory-grade.png` — Mozilla Observatory notu
 
 ---
 
