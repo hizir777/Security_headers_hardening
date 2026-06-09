@@ -74,7 +74,7 @@ Sunucunun ürettiği her değer tek bir yapılandırma modülünden (`src/config
 
 ## 🎬 Demo
 
-Kısa bir tanıtım videosu:
+Kısa bir kullanım videosu:
 
 ### Video
 
