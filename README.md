@@ -11,6 +11,7 @@
   ![Course](https://img.shields.io/badge/Course-BGT208-purple?style=flat-square)
   ![License](https://img.shields.io/badge/License-Educational-green?style=flat-square)
 
+  [Demo Video on YouTube](https://youtu.be/feyevgqGcFY) ·· [Architecture](docs/ARCHITECTURE.md) ·· [Threat Model](docs/THREAT_MODEL.md)
 </div>
 
 ---
@@ -21,10 +22,10 @@
 - [👤 Öğrenci](#-öğrenci)
 - [📚 Ders Bilgileri](#-ders-bilgileri)
 - [📋 Proje Özeti](#-proje-özeti)
+- [🎬 Demo](#-demo)
 - [🗂 Repo Yapısı](#-repo-yapısı)
 - [🚀 Kurulum](#-kurulum)
 - [🎯 Puanlama Nasıl Çalışıyor](#-puanlama-nasıl-çalışıyor)
-- [🎬 Demo](#-demo)
 - [📚 Belgeleme](#-belgeleme)
 - [🔗 Kaynaklar](#-kaynaklar)
 
@@ -68,6 +69,16 @@
 OWASP A05:2021 — Güvenlik Yanlış Yapılandırması kapsamında, altı temel savunma amaçlı HTTP yanıt başlığını (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy) sıkı bir şekilde uygulayan, üretime hazır bir **Express.js** şablonudur.
 
 Sunucunun ürettiği her değer tek bir yapılandırma modülünden (`src/config/headers.js`) türetilir; otomatik **Jest** testleriyle doğrulanır; komut satırından (`scripts/audit-headers.sh`), CI pipeline'dan ve uygulama içi canlı `/audit` panelinden denetlenebilir.
+
+---
+
+## 🎬 Demo
+
+Kısa bir tanıtım videosu:
+
+### Video
+
+[![Demo Videosu](https://img.shields.io/badge/YouTube-Demo%20Videosu-FF0000?style=flat-square&logo=youtube)](https://youtu.be/nOEHKFiikIM)
 
 ---
 
@@ -194,18 +205,6 @@ Yaygın bir sürpriz: **büyük siteler genellikle düşük puan alır.** Bu den
 | **istinye.edu.tr** | Değişken | Üniversite siteleri genelde bir CMS arkasında; başlık hijyeni platform yapılandırmasına bağlı. |
 
 > Audit sayfasındaki **Additional Checks** sekmesi 10 yardımcı başlığı (COOP, COEP, CORP, X-XSS-Protection, Server, X-Powered-By, …) gösterir ama **bunlar genel notu etkilemez** — sadece bilgi amaçlıdır.
-
----
-
-## 🎬 Demo
-
-Demo videosu ve ekran görüntüleri [`demo/`](demo/) klasöründe yer almaktadır.
-
-### Video
-
-> Demo videosu kaydedildikten sonra aşağıdaki link güncellenecektir.
-
-[![Demo Videosu](https://img.shields.io/badge/YouTube-Demo%20Videosu-FF0000?style=flat-square&logo=youtube)](https://youtu.be/nOEHKFiikIM)
 
 ---
 
