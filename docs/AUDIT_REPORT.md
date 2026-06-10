@@ -10,13 +10,6 @@ penetration-test finding, formatted for the final project submission.
 | 1 | https://mullvad.net      | WARN| OK   | OK  | OK      | OK       | OK          | A       |
 | 2 | https://google.com       | FAIL| FAIL | OK  | FAIL    | WARN     | FAIL        | F       |
 | 3 | https://owasp.org        | FAIL| OK   | OK  | OK      | OK       | WARN        | C       |
-| 4 | https://target4.example  |     |      |     |         |          |             |         |
-| 5 | https://target5.example  |     |      |     |         |          |             |         |
-| 6 | https://target6.example  |     |      |     |         |          |             |         |
-| 7 | https://target7.example  |     |      |     |         |          |             |         |
-| 8 | https://target8.example  |     |      |     |         |          |             |         |
-| 9 | https://target9.example  |     |      |     |         |          |             |         |
-| 10| https://target10.example |     |      |     |         |          |             |         |
 
 Legend: **OK** present and correctly configured; **WARN** present but
 weak; **FAIL** absent.
