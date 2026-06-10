@@ -7,9 +7,9 @@ penetration-test finding, formatted for the final project submission.
 
 | # | Target URL              | CSP | HSTS | XFO | nosniff | Referrer | Permissions | Overall |
 |---|-------------------------|-----|------|-----|---------|----------|-------------|---------|
-| 1 | https://target1.example  | OK  | OK   | OK  | OK      | OK       | OK          | A+      |
-| 2 | https://target2.example  | WARN| OK   | FAIL| OK      | WARN     | FAIL        | B       |
-| 3 | https://target3.example  | FAIL| WARN | OK  | OK      | OK       | FAIL        | C       |
+| 1 | https://mullvad.net      | WARN| OK   | OK  | OK      | OK       | OK          | A       |
+| 2 | https://google.com       | FAIL| FAIL | OK  | FAIL    | WARN     | FAIL        | F       |
+| 3 | https://owasp.org        | FAIL| OK   | OK  | OK      | OK       | WARN        | C       |
 | 4 | https://target4.example  |     |      |     |         |          |             |         |
 | 5 | https://target5.example  |     |      |     |         |          |             |         |
 | 6 | https://target6.example  |     |      |     |         |          |             |         |
