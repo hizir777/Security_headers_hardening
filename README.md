@@ -11,7 +11,7 @@
   ![Course](https://img.shields.io/badge/Course-BGT208-purple?style=flat-square)
   ![License](https://img.shields.io/badge/License-Educational-green?style=flat-square)
 
-  [Demo Video on YouTube](https://youtu.be/feyevgqGcFY) ·· [Architecture](docs/ARCHITECTURE.md) ·· [Threat Model](docs/THREAT_MODEL.md)
+  [Demo Video on YouTube](https://www.youtube.com/watch?v=nOEHKFiikIM) ·· [Architecture](docs/ARCHITECTURE.md) ·· [Threat Model](docs/THREAT_MODEL.md)
 </div>
 
 ---
