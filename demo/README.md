@@ -8,7 +8,7 @@ artefacts before submission.
 Replace the YouTube URL below with the link to your screen-recorded
 demo:
 
-[Watch the demo](https://www.youtube.com/watch?v=PLACEHOLDER_REPLACE_ME)
+[Watch the demo](https://youtu.be/nOEHKFiikIM)
 
 The demo should cover:
 
